@@ -14,6 +14,7 @@ This is a brief introduction to the core elements of
 - [Modern JavaScript](#modern-javascript)
 - [Immutability](#immutability)
 - [Routing](#routing)
+- [Container components](#container-components)
 - [HTTP requests](#http-requests)
 - Type safety
 - MobX
@@ -394,6 +395,21 @@ import {Link} from 'react-router-dom'
 
 <Link to="/blog">Check out my blog</Link>
 ```
+
+## Container components
+
+Container components are just an architectural concept referring to any
+stateful component that has a "master"-like responsibility.
+
+A container component typically holds data and methods which it delegates to
+child components to form a coherent unit, like a single web page.
+
+In our previous routing example, the `Home` page component could be seen as a
+container component that's in charge of maintaining the home page related state
+and then combining smaller components to make up the actual page.
+
+To avoid state duplication, the container component's state is the single
+source of truth that gets distributed to child components.
 
 ## HTTP requests
 
