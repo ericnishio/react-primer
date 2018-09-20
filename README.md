@@ -1,7 +1,8 @@
 # React Primer
 
 This is a concise introduction to the core elements of
-[React](https://reactjs.org) development.
+[React](https://reactjs.org) development, intended for developers who are
+already familiar with HTML, CSS, and basic JavaScript.
 
 - [Components](#components)
 - [State](#state)
