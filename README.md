@@ -14,7 +14,7 @@ This is a brief introduction to the core elements of
 - [Modern JavaScript](#modern-javascript)
 - [Immutability](#immutability)
 - [Routing](#routing)
-- HTTP requests
+- [HTTP requests](#http-requests)
 - Type safety
 - MobX
 
@@ -393,4 +393,26 @@ import {Link} from 'react-router-dom'
 ...
 
 <Link to="/blog">Check out my blog</Link>
+```
+
+## HTTP requests
+
+A React app is often just a hollow front-end client so it needs to fetch
+content (e.g. blog posts) from somewhere. Since web browsers are built around
+HTTP, we can use the very same protocol to transfer information between a React
+app and back-end services.
+
+We prefer to use [axios](https://github.com/axios/axios) for HTTP requests
+because it's simpler and more convenient than using the native
+[`fetch` API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
+directly.
+
+This is how you'd `GET` a list of blog posts from a hypothetical RESTful API:
+
+```js
+import axios from 'axios'
+
+...
+
+const blogPosts = await axios.get('https://example.com/api/blog-posts')
 ```
