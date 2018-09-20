@@ -1,6 +1,6 @@
 # React Primer
 
-This is a brief introduction to the core elements of
+This is a concise introduction to the core elements of
 [React](https://reactjs.org) development.
 
 - [Components](#components)
