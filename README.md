@@ -335,6 +335,24 @@ const giveMeAnObject = () => {
 }
 ```
 
+### Async/await
+
+`async/await` functions are a more convenient way to use `Promise`s.
+Internally, they still behave as promises and are fully compatible with other
+non-`async/await` functions that return `Promise`s.
+
+```js
+const fetchBlogPosts = async () => {
+  const blogPosts = await axios.get('https://example.com/api/blog-posts')
+
+  return blogPosts
+}
+```
+
+You can call `async` functions anywhere in your code, but you always need to
+declare a function as an `async` function if you want to use the `await`
+keyword.
+
 ## Immutability
 
 Instead of modifying existing objects and arrays, try to create new copies.
