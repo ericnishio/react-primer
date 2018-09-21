@@ -93,6 +93,7 @@ shown on the page:
 
 ```js
 ...
+
 componentDidMount() {
   this.fetchBlogPosts()
 }
@@ -113,6 +114,7 @@ fetchBlogPosts = async () => {
 render() {
   ...
 }
+
 ...
 ```
 
@@ -131,8 +133,8 @@ const Button = ({type = 'button', onClick, label}) =>
   </button>
 
 ...
+
 <Button label="Click Me" onClick={() => window.alert('Hi!')} />
-...
 ```
 
 ## Events
@@ -248,10 +250,10 @@ const PrimaryButton = styled(Button)`
 `
 
 ...
+
 <PrimaryButton onClick={() => window.alert('Hi!')}>
   Click Me
 </PrimaryButton>
-...
 ```
 
 ## Modern JavaScript
