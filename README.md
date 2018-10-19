@@ -444,12 +444,38 @@ because it's simpler and more convenient than using the native
 [`fetch` API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
 directly.
 
-This is how you'd `GET` a list of blog posts from a hypothetical RESTful API:
+This is how you'd `GET` a list of blog posts from a hypothetical RESTful API
+and show them in a list:
 
 ```js
+import React, {Component} from 'react'
 import axios from 'axios'
 
-...
+class BlogPosts extends Component {
+  state = {
+    blogPosts: [],
+  }
 
-const blogPosts = await axios.get('https://example.com/api/blog-posts')
+  fetchBlogPosts = async () => {
+    const blogPosts = await axios.get('https://example.com/api/blog-posts')
+
+    this.setState({blogPosts})
+  }
+
+  componentDidMount() {
+    this.fetchBlogPosts()
+  }
+
+  render() {
+    return (
+      <ul>
+        {
+          this.state.blogPosts.map(
+            blogPost => <li key={blogPost.id}>{blogPost.title}</li>
+          )
+        }
+      </ul>
+    )
+  }
+}
 ```
