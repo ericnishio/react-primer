@@ -4,6 +4,7 @@ This is a concise introduction to the core elements of
 [React](https://reactjs.org) development, intended for developers who are
 already familiar with HTML, CSS, and basic JavaScript.
 
+- [Installation](#installation)
 - [Components](#components)
 - [State](#state)
 - [Props](#props)
@@ -19,6 +20,47 @@ already familiar with HTML, CSS, and basic JavaScript.
 - [HTTP requests](#http-requests)
 - Type safety
 - MobX
+
+## Installation
+
+### Install nvm
+
+```
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+```
+
+nvm allows you to install and switch between multiple versions of Node which is
+handy when two projects depend on a different Node version.
+
+### Install Node
+
+```
+nvm install node
+```
+
+While running a React application does not require Node, the development tools
+are meant to run in a Node environment.
+
+### Install create-react-app
+
+```
+npm install -g create-react-app
+```
+
+create-react-app is a convenience tool you can use to create blank React
+projects that require no build configuration.
+
+### Create a blank React project
+
+```
+npx create-react-app my-project
+```
+
+To start your app in development mode, run:
+
+```
+npm start
+```
 
 ## Components
 
