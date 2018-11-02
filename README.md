@@ -18,7 +18,7 @@ already familiar with HTML, CSS, and basic JavaScript.
 - [Routing](#routing)
 - [Container components](#container-components)
 - [HTTP requests](#http-requests)
-- Type safety
+- [Type safety with TypeScript](#type-safety-with-typescript)
 - MobX
 
 ## Installation
@@ -53,7 +53,7 @@ projects that require no build configuration.
 ### Create a blank React project
 
 ```
-npx create-react-app my-project
+npx create-react-app my-app
 ```
 
 To start your app in development mode, run:
@@ -162,7 +162,7 @@ render() {
 
 ## Stateless components
 
-Stateless components, also referred to as dumb components, are essentually just
+Stateless components, also referred to as dumb components, are essentially just
 render functions that take any number of props as arguments and return JSX
 (markup). They do not have their own state so their behavior is solely
 influenced by props.
@@ -520,4 +520,28 @@ class BlogPosts extends Component {
     )
   }
 }
+```
+
+## Type safety with TypeScript
+
+JavaScript is a dynamically typed language and does not provide a way to ensure
+variables are of the correct type before executing the code. This means that
+mistakenly giving a wrong input to a function will go unnoticed until you or
+somebody else encounters the problem firsthand.
+
+The main advantage to having a statically typed language, on the other hand,
+is that it notifies you of type errors as you're coding. It also lets you
+inspect the shape of data structures and functions that are being used,
+functioning as a form of self-documentation.
+
+To benefit from such features, you can choose to write your source code in
+[TypeScript](https://www.typescriptlang.org), a statically typed language
+designed to augment the dynamic nature of JavaScript. It transpiles your code
+into regular JavaScript that runs in browsers and other JavaScript-powered
+environments.
+
+To scaffold a blank TypeScript-based React project, run:
+
+```
+npx create-react-app my-app --typescript
 ```
