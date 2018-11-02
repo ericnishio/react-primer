@@ -145,10 +145,10 @@ fetchBlogPosts = async () => {
     isLoading: true, // render a spinner while this.state.isLoading is true
   })
 
-  const blogPosts = await axios.get('https://example.com/api/blog-posts')
+  const response = await axios.get('https://example.com/api/blog-posts')
 
   this.setState({
-    blogPosts,
+    blogPosts: response.data,
     isLoading: false,
   })
 }
@@ -385,9 +385,9 @@ non-`async/await` functions that return `Promise`s.
 
 ```js
 const fetchBlogPosts = async () => {
-  const blogPosts = await axios.get('https://example.com/api/blog-posts')
+  const response = await axios.get('https://example.com/api/blog-posts')
 
-  return blogPosts
+  return response.data
 }
 ```
 
@@ -499,9 +499,9 @@ class BlogPosts extends Component {
   }
 
   fetchBlogPosts = async () => {
-    const blogPosts = await axios.get('https://example.com/api/blog-posts')
+    const response = await axios.get('https://example.com/api/blog-posts')
 
-    this.setState({blogPosts})
+    this.setState({blogPosts: response.data})
   }
 
   componentDidMount() {
