@@ -545,3 +545,24 @@ To scaffold a blank TypeScript-based React project, run:
 ```
 npx create-react-app my-app --typescript
 ```
+
+For example, you can declare a strict interface for a component's prop
+structure:
+
+```
+interface Option {
+  name: string,
+  value: string | number | boolean,
+}
+
+interface Props {
+  options: Array<Option>,
+}
+
+class Dropdown extends Component<Props> {
+  ...
+}
+```
+
+Giving the component an incompatible set of props immediately notifies you of
+the inconsistency and urges you to fix the issue.
