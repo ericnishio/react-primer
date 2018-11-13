@@ -19,7 +19,7 @@ already familiar with HTML, CSS, and basic JavaScript.
 - [Container components](#container-components)
 - [HTTP requests](#http-requests)
 - [Type safety with TypeScript](#type-safety-with-typescript)
-- MobX
+- [MobX](#mobx)
 
 ## Installation
 
@@ -526,13 +526,13 @@ class BlogPosts extends Component {
 
 JavaScript is a dynamically typed language and does not provide a way to ensure
 variables are of the correct type before executing the code. This means that
-mistakenly giving a wrong input to a function will go unnoticed until you or
-somebody else encounters the problem firsthand.
+mistakenly giving a wrong input value to a function will go unnoticed until you
+or somebody else encounters a glitch.
 
-The main advantage to having a statically typed language, on the other hand,
-is that it notifies you of type errors as you're coding. It also lets you
-inspect the shape of data structures and functions that are being used,
-functioning as a form of self-documentation.
+The main advantage to having a statically typed language, therefore, is that it
+notifies you of type errors as you're coding. It also lets you inspect the
+shape of data structures and functions that are being used, serving as a form
+of self-documentation as well.
 
 To benefit from such features, you can choose to write your source code in
 [TypeScript](https://www.typescriptlang.org), a statically typed language
@@ -547,22 +547,169 @@ npx create-react-app my-app --typescript
 ```
 
 For example, you can declare a strict interface for a component's prop
-structure:
+and state structure:
 
-```
+```tsx
+import React, {Component} from 'react'
+
+type Value = string | number
+
 interface Option {
   name: string,
-  value: string | number | boolean,
+  value: Value,
 }
 
 interface Props {
+  defaultValue?: Value, // ? makes this property optional
   options: Array<Option>,
+  onSelect: (option: Option) => void,
 }
 
-class Dropdown extends Component<Props> {
-  ...
+interface State {
+  isOpen: boolean,
+}
+
+class Dropdown extends Component<Props, State> {
+  state = {
+    isOpen: false,
+  }
+
+  render() {
+    const {isOpen} = this.state
+
+    const selectedOption = this.props.options.find(option => option.value === this.props.defaultValue)
+    
+    const titleText = selectedOption ? selectedOption.name : 'Please select...'
+
+    return (
+      <div>
+        {
+          isOpen
+            ? <ul>
+              {
+                this.props.options.map(
+                  option =>
+                    <li
+                      key={option.value}
+                      onClick={() => {
+                        this.props.onSelect(option)
+                        this.setState({isOpen: false})
+                      }}
+                    >
+                      {option.name}
+                    </li>
+                )
+              }
+            </ul>
+            : <span onClick={() => this.setState({isOpen: true})}>{titleText}</span>
+        }
+      </div>
+    )
+  }
 }
 ```
 
 Giving the component an incompatible set of props immediately notifies you of
 the inconsistency and urges you to fix the issue.
+
+## MobX
+
+As your app grows in complexity, it often becomes challenging and cumbersome to
+maintain the entire application state inside individual components and pass bits
+and pieces of it to child components.
+
+[MobX](https://mobx.js.org) is a third-party library that enables you to
+declare self-contained data stores for your React application. Instead of
+passing states down the component tree, you can simply import a MobX store into
+a React component and read and write values directly without having to tap into
+the prop chain.
+
+A MobX store is a plain JavaScript class that consists of MobX-decorated
+instance variables and methods. The class is immediately instantiated and
+exported within the class file itself so that importing the store always gives
+a reference to the same exact store instance, and not a new instance each time.
+
+Example:
+
+```js
+// blogStore.js
+
+import axios from 'axios'
+import {observable} from 'mobx'
+
+class BlogStore {
+  @observable posts = []
+  @observable isFetching = false
+
+  fetchPosts = async () => {
+    this.isFetching = true
+
+    const response = await axios.get('https://example.com/api/blog-posts')
+
+    this.posts = response.data // here we update the state simply by assigning a new value
+    this.isFetching = false // another state change
+  }
+}
+
+export default new BlogStore() // singleton
+```
+
+The `@observable` decorator marks an instance variable as a MobX state value
+which can then be observed by React components.
+
+```js
+// Blog.js
+
+import React, {Component} from 'react'
+import {observer} from 'mobx-react'
+
+import blogStore from './blogStore.js'
+
+@observer // this decorator tells the React component to listen for MobX state changes
+class Blog extends Component {
+  componentDidMount() {
+    blogStore.fetchPosts()
+  }
+
+  render() {
+    if (blogStore.isFetching) {
+      return <span>Loading...</span>
+    }
+
+    return (
+      <section>
+        {
+          blogStore.posts.map(post =>
+            <article key={post.id}>
+              <h2>{post.title}</h2>
+              <p>{post.teaser}</p>
+            </article>
+          )
+        }
+      </section>
+    )
+  }
+}
+```
+
+The easiest way to try out MobX is to create a blank TypeScript project with
+the latest version of create-react-app:
+
+```
+npx create-react-app my-app --typescript
+```
+
+Then add these lines to your `tsconfig.json`:
+
+```json
+{
+  "lib": ["dom", "es2015"],
+  "experimentalDecorators": true
+}
+```
+
+And finally install MobX and the MobX utility library for React:
+
+```
+npm install mobx mobx-react
+```
