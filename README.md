@@ -20,6 +20,7 @@ already familiar with HTML, CSS, and basic JavaScript.
 - [HTTP requests](#http-requests)
 - [Type safety with TypeScript](#type-safety-with-typescript)
 - [MobX](#mobx)
+- API abstraction
 
 ## Installation
 
