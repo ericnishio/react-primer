@@ -20,7 +20,7 @@ already familiar with HTML, CSS, and basic JavaScript.
 - [HTTP requests](#http-requests)
 - [Type safety with TypeScript](#type-safety-with-typescript)
 - [MobX](#mobx)
-- API abstraction
+- [API abstraction](#api-abstraction)
 
 ## Installation
 
@@ -718,3 +718,158 @@ npm install mobx mobx-react
 Please note that your source files will also require a `.tsx` file extension
 (TypeScript with support for JSX syntax).
 
+## API abstraction
+
+When interfacing with an external API it's highly recommended that you create
+your own front-end wrapper around the API. This comes with a number of
+benefits:
+
+- Easy to switch base URLs based on the current environment (e.g. production)
+- Easy to factor in authentication logic
+- Easy to mock endpoints while the real endpoints are still being developed
+- Easy to reuse and cache data
+- All API endpoints are conveniently located inside the wrapper
+
+Here's a simplified example of an API wrapper:
+
+```js
+// api.js
+
+import axios from 'axios'
+
+import Authentication from './Authentication'
+import Blog from './Blog'
+
+class Api {
+  constructor(baseUrl) {
+    this.baseUrl = baseUrl
+
+    // Group endpoints into cohesive modules
+    this.authentication = new Authentication(this)
+    this.blog = new Blog(this)
+  }
+
+  // This is an HTTP request helper that can be reused by all API modules
+  request = async ({method, endpoint, data, requiresAuthToken = false, headers = {}}) => {
+    if (requiresAuthToken && this.authentication.isAuthenticated()) {
+      headers.authorization = `Bearer ${this.authentication.accessToken.value}`
+    }
+
+    const url = `${this.baseUrl}${endpoint}`
+    
+    const response = await axios({url, method, data})
+
+    return response.data
+  }
+}
+
+export default new Api(process.env.apiBaseUrl)
+```
+
+```js
+// Authentication.js
+
+class Authentication {
+  constructor(api) {
+    this.api = api
+  }
+
+  isAuthenticated = () => {
+    return this.accessToken ? this.accessToken.expiresAt > +new Date() : false
+  }
+
+  login = async (email, password) => {
+    try {
+      const accessToken = await this.api.request({
+        method: 'post',
+        endpoint: '/auth/login',
+        data: {email, password},
+      })
+
+      this.accessToken = accessToken
+    } catch (e) {
+      window.alert('Access denied')
+    }
+  }
+
+  logout = () => {
+    this.authToken = undefined
+  }
+
+  sleep = (durationMs) => new Promise(resolve => setTimeout(resolve, durationMs))
+}
+
+export default Authentication
+```
+
+```js
+// Blog.js
+
+class Blog {
+  constructor(api) {
+    this.api = api
+  }
+
+  fetchPostById = async (id) => {
+    const post = await this.api.request({method: 'get', endpoint: `/blog/${id}`})
+
+    return post
+  }
+
+  createPost = async (title, body) => {
+    // This endpoint is still being worked on by the back-end developer so
+    // we'll just go ahead and mock the endpoint for our own convenience.
+    // Once the real endpoint is completed we can modify this helper and
+    // send the request to the real endpoint.
+
+    await this.api.sleep(1000) // simulate a 1-second delay
+
+    return {
+      id: 12345,
+      title,
+      body,
+    }
+  }
+
+  postComment = async (blogPostId, comment) => {
+    await this.api.request({
+      method: 'post',
+      endpoint: `/blog/${blogPostId}/comment`,
+      requiresAuthToken: true,
+      data: comment,
+    })
+  }
+}
+
+export default Blog
+```
+
+Use the API wrapper inside a React component:
+
+```jsx
+import React, {Component} from 'react'
+
+import api from './api'
+
+class BlogPost extends Component {
+  state = {
+    post: undefined,
+  }
+  
+  componentDidMount() {
+    const {id} = this.props.match.params
+
+    this.fetchPostById(id)
+  }
+
+  fetchPostById = async (id) => {
+    const post = await api.blog.fetchPostById(id)
+
+    this.setState({post})
+  }
+
+  render() {
+    ...
+  }
+}
+```
