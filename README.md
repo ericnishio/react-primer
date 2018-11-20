@@ -713,3 +713,7 @@ And finally install MobX and the MobX utility library for React:
 ```
 npm install mobx mobx-react
 ```
+
+Please note that your source files will also require a `.tsx` file extension
+(TypeScript with support for JSX syntax).
+
