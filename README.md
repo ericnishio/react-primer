@@ -73,6 +73,12 @@ In the long run, it's recommended to split larger components into smaller
 ones. Small components are easier to reuse and debug, whereas large components
 are challenging to maintain and understand.
 
+React employs a templating syntax called JSX to make it easier for developers
+to compose UI elements in an HTML-like format. JSX is weaved into the rest of
+the application JavaScript, making templates a first-class citizen. For
+example, you are able to store JSX in JavaScript variables and make functions
+output JSX.
+
 ## State
 
 Some components have their own internal state that dictates how they should
@@ -750,8 +756,8 @@ class Api {
   }
 
   // This is an HTTP request helper that can be reused by all API modules
-  request = async ({method, endpoint, data, requiresAuthToken = false, headers = {}}) => {
-    if (requiresAuthToken && this.authentication.isAuthenticated()) {
+  request = async ({method, endpoint, data, auth = false, headers = {}}) => {
+    if (auth && this.authentication.isAuthenticated()) {
       headers.authorization = `Bearer ${this.authentication.accessToken.value}`
     }
 
@@ -835,7 +841,7 @@ class Blog {
     await this.api.request({
       method: 'post',
       endpoint: `/blog/${blogPostId}/comment`,
-      requiresAuthToken: true,
+      auth: true,
       data: comment,
     })
   }
